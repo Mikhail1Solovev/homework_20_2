@@ -1,35 +1,24 @@
-{% extends 'shop/base.html' %}
-{% load static %}
+{% extends "shop/base.html" %}
+
+{% block title %}Список товаров{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2>Список товаров</h2>
-    <p>Количество товаров: {{ object_list|length }}</p>
-    {% if object_list %}
-        <div class="row">
-            {% for product in object_list %}
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                    {% else %}
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="{{ product.name }}">
+    <h1>Список товаров</h1>
+    <p>Количество товаров: {{ products.count }}</p>
+    {% if products %}
+        <ul class="list-group">
+            {% for product in products %}
+                <li class="list-group-item">
+                    <a href="{% url 'product_detail' product.id %}">
+                        {{ product.name }} - {{ product.price }} руб.
+                    </a>
+                    {% if product.active_version %}
+                        <span class="badge bg-primary float-end">Текущая версия: {{ product.active_version.version_name }}</span>
                     {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
-                        <p class="card-text">{{ product.description|truncatechars:100|safe }}"></p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="{% url 'product_detail' product.pk %}" class="btn btn-sm btn-primary">Подробнее</a>
-                            </div>
-                            <small class="text-muted">${{ product.price }}</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </li>
             {% endfor %}
-        </div>
+        </ul>
     {% else %}
         <p>Товары отсутствуют.</p>
     {% endif %}
-</div>
 {% endblock %}
